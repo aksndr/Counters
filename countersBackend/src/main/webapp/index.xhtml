@@ -1,0 +1,54 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:rich="http://richfaces.org/rich"
+      xmlns:a4j="http://richfaces.org/a4j">
+<h:head>
+    <title>Counters</title>
+</h:head>
+<h:body>
+    <h:form>
+        <H2>Вход</H2>
+        <rich:panel title="Аутентификация">
+            <h:panelGrid columns="3">
+                <h:outputText value="Логин: "/>
+                <h:inputText id="login" value="#{UserLogin.id}" required="true"/>
+                <rich:message for="login" ajaxRendered="true"/>
+                <h:outputText value="Пароль: "/>
+                <h:inputSecret id="pass" value="#{UserLogin.pass}" required="false">
+                </h:inputSecret >
+                <rich:message for="pass" ajaxRendered="true"/>
+                <f:facet name="footer">
+                    <h:outputText value="#{UserLogin.message}" rendered="#{not empty UserLogin.message}" styleClass="outhello"/> <br/>
+                    <h:commandButton value="Войти" rendered="#{UserLogin.registered}" render="out" action="#{UserLogin.login}"/>
+                    <h:commandButton value="Зарегистрировать" rendered="#{!UserLogin.registered}" action="/pages/register.xhtml?faces-redirect=true"/>
+                </f:facet>
+            </h:panelGrid>
+
+            <a4j:outputPanel id="out" ajaxRendered="true">
+                <h:outputText value="Имя: #{UserLogin.name}" rendered="#{not empty UserLogin.name}"
+                              styleClass="outhello"/>
+                <h:outputText value=" Фамилия: #{UserLogin.lastName}" rendered="#{not empty UserLogin.lastName}"
+                              styleClass="outhello"/><br/>
+                <h:outputText value="Адрес:" rendered="#{not empty UserLogin.country or not empty UserLogin.city}
+                       or not empty UserLogin.street} or not empty UserLogin.house} or not empty UserLogin.flat}"
+                              styleClass="outhello"/>
+                <h:outputText value=" страна: #{UserLogin.country} " rendered="#{not empty UserLogin.country}"
+                              styleClass="outhello"/>
+                <h:outputText value=" г.: #{UserLogin.city} " rendered="#{not empty UserLogin.city}"
+                              styleClass="outhello"/>
+                <h:outputText value=" ул.: #{UserLogin.street} " rendered="#{not empty UserLogin.street}"
+                              styleClass="outhello"/>
+                <h:outputText value=" дом: #{UserLogin.house} " rendered="#{not empty UserLogin.house}"
+                              styleClass="outhello"/>
+                <h:outputText value=" кв: #{UserLogin.flat} " rendered="#{not empty UserLogin.flat}"
+                              styleClass="outhello"/><br/>
+            </a4j:outputPanel>
+        </rich:panel>
+    </h:form>
+    <br/>
+
+</h:body>
+</html>

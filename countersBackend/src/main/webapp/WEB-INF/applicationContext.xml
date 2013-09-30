@@ -1,0 +1,68 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+       http://www.springframework.org/schema/tx
+       http://www.springframework.org/schema/tx/spring-tx-3.0.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context-3.0.xsd">
+
+    <!-- Beans Declaration -->
+    <bean id="User" class="ru.aksndr.entity.User"/>
+    <bean id="Address" class="ru.aksndr.entity.Address"/>
+
+    <!-- Data Source Declaration -->
+    <bean id="DataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+        <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
+        <property name="url" value="jdbc:mysql://localhost:3306/test"/>
+        <property name="username" value="sa"/>
+        <property name="password" value="sa"/>
+    </bean>
+
+    <!-- Session Factory Declaration -->
+    <bean id="SessionFactory" class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
+        <property name="dataSource" ref="DataSource"/>
+        <property name="packagesToScan" value="ru.aksndr.entity" />
+        <property name="annotatedClasses">
+            <list>
+                <value>ru.aksndr.entity.User</value>
+                <value>ru.aksndr.entity.Address</value>
+            </list>
+        </property>
+        <property name="hibernateProperties">
+            <props>
+                <prop key="hibernate.dialect">org.hibernate.dialect.MySQL5Dialect</prop>
+                <prop key="hibernate.show_sql">true</prop>
+            </props>
+        </property>
+    </bean>
+
+    <!-- DAO Declaration -->
+    <bean id="userDAO" class="ru.aksndr.dao.UserDaoImpl">
+        <property name="sessionFactory" ref="SessionFactory"/>
+    </bean>
+
+    <bean id="addressDAO" class="ru.aksndr.dao.AddressDaoImpl">
+        <property name="sessionFactory" ref="SessionFactory"/>
+    </bean>
+
+    <!-- Enable the configuration of transactional behavior based on annotations -->
+    <tx:annotation-driven transaction-manager="txManager"/>
+
+    <!-- Transaction Manager is defined -->
+    <bean id="txManager" class="org.springframework.orm.hibernate4.HibernateTransactionManager">
+        <property name="sessionFactory" ref="SessionFactory"/>
+    </bean>
+
+    <!-- Service Declaration -->
+    <bean id="userService" class="ru.aksndr.service.UserServiceImpl" autowire-candidate="true">
+        <property name="userDao" ref="userDAO"/>
+    </bean>
+
+    <bean id="addressService" class="ru.aksndr.service.AddressServiceImpl" autowire-candidate="true">
+        <property name="addressDao" ref="addressDAO"/>
+    </bean>
+
+</beans>
